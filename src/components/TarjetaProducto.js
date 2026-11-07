@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   botonEditar: {
-    backgroundColor: '#16A34A',
+    backgroundColor: '#2563EB',
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 6,

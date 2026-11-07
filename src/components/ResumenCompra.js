@@ -73,7 +73,7 @@ export default function ResumenCompra({
       <View style={styles.contenedorBoton}>
         <Button
           title="Vaciar selección de compra"
-          color="#53745B"
+          color="#EA580C"
           onPress={onLimpiarCompra}
         />
       </View>
@@ -87,18 +87,18 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#53745B',
+    borderWidth: 1.5,
+    borderColor: '#EA580C',
   },
   titulo: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333333',
+    color: '#1E293B',
     marginBottom: 4,
   },
   listaNombres: {
     fontSize: 13,
-    color: '#666666',
+    color: '#64748B',
     marginBottom: 12,
   },
   filaTotal: {
@@ -110,26 +110,26 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   filaTotalGanadora: {
-    backgroundColor: '#E7EFE8',
+    backgroundColor: '#FFF7ED',
   },
   nombreNegocio: {
     fontSize: 15,
-    color: '#333333',
+    color: '#334155',
   },
   montoTotal: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#333333',
+    color: '#1E293B',
   },
   montoTotalGanador: {
-    color: '#53745B',
+    color: '#EA580C',
   },
   recomendacion: {
     marginTop: 8,
     marginBottom: 12,
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#53745B',
+    color: '#EA580C',
     textAlign: 'center',
   },
   contenedorBoton: {

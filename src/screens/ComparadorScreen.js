@@ -184,7 +184,7 @@ export default function ComparadorScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F7F4EF',
+    backgroundColor: '#EEF2F6',
   },
   contenido: {
     paddingTop: 50,
@@ -194,11 +194,11 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#333333',
+    color: '#1E293B',
   },
   subtitulo: {
     fontSize: 15,
-    color: '#777777',
+    color: '#64748B',
     marginTop: 4,
     marginBottom: 16,
   },
@@ -210,10 +210,12 @@ const styles = StyleSheet.create({
   },
   inputBusqueda: {
     borderWidth: 1,
-    borderColor: '#DDDDDD',
+    borderColor: '#CBD5E1',
+    backgroundColor: '#F8FAFC',
     borderRadius: 8,
     padding: 10,
     fontSize: 15,
+    color: '#1E293B',
   },
   botonCancelar: {
     alignItems: 'center',
@@ -221,7 +223,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   textoCancelar: {
-    color: '#777777',
+    color: '#64748B',
     fontWeight: '600',
   },
 });

@@ -73,19 +73,21 @@ const styles = StyleSheet.create({
   tituloSeccion: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333333',
+    color: '#1E293B',
     marginBottom: 12,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#DDDDDD',
+    borderColor: '#CBD5E1',
+    backgroundColor: '#F8FAFC',
     borderRadius: 8,
     padding: 12,
     marginBottom: 10,
     fontSize: 15,
+    color: '#1E293B',
   },
   boton: {
-    backgroundColor: '#53745B',
+    backgroundColor: '#2563EB',
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   textoEdicion: {
-    color: '#777777',
+    color: '#64748B',
     fontSize: 13,
     textAlign: 'center',
     marginTop: 10,

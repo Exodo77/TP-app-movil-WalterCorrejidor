@@ -123,21 +123,24 @@ const styles = StyleSheet.create({
   nombreProducto: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333333',
+    color: '#1E293B',
     flex: 1,
     marginRight: 8,
   },
   botonCompra: {
-    backgroundColor: '#E7EFE8',
+    backgroundColor: '#FFF3E0',
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FDBA74',
   },
   botonCompraActivo: {
-    backgroundColor: '#53745B',
+    backgroundColor: '#EA580C',
+    borderColor: '#EA580C',
   },
   textoBotonCompra: {
-    color: '#53745B',
+    color: '#EA580C',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -146,7 +149,7 @@ const styles = StyleSheet.create({
   },
   listaPrecios: {
     borderTopWidth: 1,
-    borderTopColor: '#EEEEEE',
+    borderTopColor: '#E2E8F0',
     paddingTop: 8,
   },
   filaNegocio: {
@@ -159,7 +162,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   filaMasBaja: {
-    backgroundColor: '#F2F7F3',
+    backgroundColor: '#EFF6FF',
   },
   infoNegocio: {
     flex: 1,
@@ -169,49 +172,49 @@ const styles = StyleSheet.create({
   },
   nombreNegocio: {
     fontSize: 15,
-    color: '#444444',
+    color: '#475569',
   },
   precioNegocio: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#333333',
+    color: '#1E293B',
   },
   precioMasBajoTexto: {
-    color: '#53745B',
+    color: '#1D4ED8',
     fontWeight: 'bold',
   },
   botonEditar: {
-    backgroundColor: '#E7EFE8',
+    backgroundColor: '#DBEAFE',
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 6,
   },
   textoEditar: {
-    color: '#53745B',
+    color: '#1D4ED8',
     fontSize: 12,
     fontWeight: '600',
   },
   destacadoMenorPrecio: {
-    backgroundColor: '#E7EFE8',
+    backgroundColor: '#DBEAFE',
     padding: 12,
     borderRadius: 8,
     marginTop: 10,
   },
   tituloMenorPrecio: {
     fontSize: 13,
-    color: '#53745B',
+    color: '#1D4ED8',
     fontWeight: '600',
   },
   negocioGanador: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333333',
+    color: '#1E293B',
     marginTop: 2,
   },
   montoGanador: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#53745B',
+    color: '#1D4ED8',
     marginTop: 2,
   },
   pieTarjeta: {
@@ -219,13 +222,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   botonEliminar: {
-    backgroundColor: '#FBE9E7',
+    backgroundColor: '#FEE2E2',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 8,
   },
   textoEliminar: {
-    color: '#B3261E',
+    color: '#B91C1C',
     fontSize: 12,
     fontWeight: '600',
   },

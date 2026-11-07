@@ -16,6 +16,8 @@ import {
   editarPrecioNegocio,
   eliminarProducto,
   filtrarProductos,
+  obtenerSugerenciasProductos,
+  obtenerSugerenciasNegocios,
 } from '../controllers/ProductosController';
 
 import FormularioProducto from '../components/FormularioProducto';
@@ -179,6 +181,16 @@ export default function ComparadorScreen() {
 
   const productosFiltrados = filtrarProductos(productos, busqueda);
 
+  const sugerenciasProductos = obtenerSugerenciasProductos(
+    productos,
+    nombreProducto
+  );
+
+  const sugerenciasNegocios = obtenerSugerenciasNegocios(
+    productos,
+    negocio
+  );
+
   const productosEnCompra = productos.filter((producto) =>
     idsEnCompra.includes(producto.id)
   );
@@ -214,6 +226,8 @@ export default function ComparadorScreen() {
         setNegocio={setNegocio}
         precio={precio}
         setPrecio={setPrecio}
+        sugerenciasProductos={sugerenciasProductos}
+        sugerenciasNegocios={sugerenciasNegocios}
         onAgregar={manejarAgregar}
         onEditar={manejarGuardarEdicion}
         modoEdicion={modoEdicion}

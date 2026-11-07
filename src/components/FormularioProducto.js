@@ -13,6 +13,8 @@ export default function FormularioProducto({
   setNegocio,
   precio,
   setPrecio,
+  sugerenciasProductos = [],
+  sugerenciasNegocios = [],
   onAgregar,
   onEditar,
   modoEdicion,
@@ -31,12 +33,44 @@ export default function FormularioProducto({
         onChangeText={setNombreProducto}
       />
 
+      {sugerenciasProductos.length > 0 && (
+        <View style={styles.contenedorSugerencias}>
+          {sugerenciasProductos.map((sugerencia) => (
+            <Pressable
+              key={sugerencia}
+              style={styles.chipSugerencia}
+              onPress={() => setNombreProducto(sugerencia)}
+            >
+              <Text style={styles.textoSugerencia}>
+                {sugerencia}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
+
       <TextInput
         style={styles.input}
         placeholder="Negocio (ej: Almacén Don José)"
         value={negocio}
         onChangeText={setNegocio}
       />
+
+      {sugerenciasNegocios.length > 0 && (
+        <View style={styles.contenedorSugerencias}>
+          {sugerenciasNegocios.map((sugerencia) => (
+            <Pressable
+              key={sugerencia}
+              style={styles.chipSugerencia}
+              onPress={() => setNegocio(sugerencia)}
+            >
+              <Text style={styles.textoSugerencia}>
+                {sugerencia}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
 
       <TextInput
         style={styles.input}
@@ -91,6 +125,24 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#1E293B',
   },
+  contenedorSugerencias: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: -4,
+    marginBottom: 10,
+  },
+  chipSugerencia: {
+    backgroundColor: '#DBEAFE',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 14,
+  },
+  textoSugerencia: {
+    color: '#1D4ED8',
+    fontSize: 13,
+    fontWeight: '600',
+  },
   boton: {
     backgroundColor: '#16A34A',
     padding: 14,
@@ -112,4 +164,3 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
-

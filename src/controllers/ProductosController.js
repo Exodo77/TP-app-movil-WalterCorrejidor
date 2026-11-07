@@ -139,3 +139,46 @@ export function filtrarProductos(productos, busqueda) {
     normalizarTexto(producto.nombre).includes(termino)
   );
 }
+
+export function obtenerSugerenciasProductos(productos, texto) {
+  const termino = normalizarTexto(texto);
+
+  if (!termino) {
+    return [];
+  }
+
+  return productos
+    .map((producto) => producto.nombre)
+    .filter(
+      (nombre) =>
+        normalizarTexto(nombre).includes(termino) &&
+        normalizarTexto(nombre) !== termino
+    );
+}
+
+export function obtenerSugerenciasNegocios(productos, texto) {
+  const termino = normalizarTexto(texto);
+
+  if (!termino) {
+    return [];
+  }
+
+  const negociosUnicos = [];
+
+  productos.forEach((producto) => {
+    producto.precios.forEach((item) => {
+      const yaEsta = negociosUnicos.some(
+        (n) => normalizarTexto(n) === normalizarTexto(item.negocio)
+      );
+      if (!yaEsta) {
+        negociosUnicos.push(item.negocio);
+      }
+    });
+  });
+
+  return negociosUnicos.filter(
+    (negocio) =>
+      normalizarTexto(negocio).includes(termino) &&
+      normalizarTexto(negocio) !== termino
+  );
+}

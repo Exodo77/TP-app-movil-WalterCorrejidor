@@ -16,6 +16,7 @@ export default function FormularioProducto({
   onAgregar,
   onEditar,
   modoEdicion,
+  deshabilitado,
 }) {
   return (
     <View style={styles.formulario}>
@@ -46,8 +47,12 @@ export default function FormularioProducto({
       />
 
       <Pressable
-        style={styles.boton}
+        style={[
+          styles.boton,
+          deshabilitado && styles.botonDeshabilitado,
+        ]}
         onPress={modoEdicion ? onEditar : onAgregar}
+        disabled={deshabilitado}
       >
         <Text style={styles.textoBoton}>
           {modoEdicion ? 'Guardar cambios' : 'Guardar precio'}
@@ -91,6 +96,9 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
+  },
+  botonDeshabilitado: {
+    opacity: 0.5,
   },
   textoBoton: {
     color: '#FFFFFF',

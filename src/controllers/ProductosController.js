@@ -17,11 +17,11 @@ function normalizarTexto(texto) {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
-export function cargarProductos() {
-  return obtenerProductos();
+export async function cargarProductos() {
+  return await obtenerProductos();
 }
 
-export function agregarOActualizarPrecio(
+export async function agregarOActualizarPrecio(
   productosActuales,
   nombreProducto,
   negocio,
@@ -79,11 +79,11 @@ export function agregarOActualizarPrecio(
     nuevosProductos = [...productosActuales, nuevoProducto];
   }
 
-  guardarProductos(nuevosProductos);
+  await guardarProductos(nuevosProductos);
   return nuevosProductos;
 }
 
-export function editarPrecioNegocio(
+export async function editarPrecioNegocio(
   productosActuales,
   idProducto,
   negocioOriginal,
@@ -115,16 +115,16 @@ export function editarPrecioNegocio(
     };
   });
 
-  guardarProductos(nuevosProductos);
+  await guardarProductos(nuevosProductos);
   return nuevosProductos;
 }
 
-export function eliminarProducto(productosActuales, id) {
+export async function eliminarProducto(productosActuales, id) {
   const nuevosProductos = productosActuales.filter(
     (producto) => producto.id !== id
   );
 
-  guardarProductos(nuevosProductos);
+  await guardarProductos(nuevosProductos);
   return nuevosProductos;
 }
 
@@ -139,4 +139,3 @@ export function filtrarProductos(productos, busqueda) {
     normalizarTexto(producto.nombre).includes(termino)
   );
 }
-

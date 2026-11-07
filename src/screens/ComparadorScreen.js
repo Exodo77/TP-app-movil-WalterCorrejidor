@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
   TextInput,
   ScrollView,
   StyleSheet,
+  ActivityIndicator,
   Alert,
   Pressable,
 } from 'react-native';
@@ -22,7 +23,7 @@ import ListaProductos from '../components/ListaProductos';
 import ResumenCompra from '../components/ResumenCompra';
 
 export default function ComparadorScreen() {
-  const [productos, setProductos] = useState(cargarProductos());
+  const [productos, setProductos] = useState([]);
   const [busqueda, setBusqueda] = useState('');
 
   const [nombreProducto, setNombreProducto] = useState('');
@@ -32,7 +33,28 @@ export default function ComparadorScreen() {
   const [edicionActual, setEdicionActual] = useState(null);
   const [idsEnCompra, setIdsEnCompra] = useState(['1', '2']);
 
+  const [cargando, setCargando] = useState(true);
+  const [guardando, setGuardando] = useState(false);
+
   const modoEdicion = edicionActual !== null;
+
+  useEffect(() => {
+    async function iniciar() {
+      try {
+        const datos = await cargarProductos();
+        setProductos(datos);
+      } catch (error) {
+        Alert.alert(
+          'Error',
+          'No se pudieron cargar los productos.'
+        );
+      } finally {
+        setCargando(false);
+      }
+    }
+
+    iniciar();
+  }, []);
 
   const limpiarFormulario = () => {
     setNombreProducto('');
@@ -41,9 +63,15 @@ export default function ComparadorScreen() {
     setEdicionActual(null);
   };
 
-  const manejarAgregar = () => {
+  const manejarAgregar = async () => {
+    if (guardando || cargando) {
+      return;
+    }
+
     try {
-      const nuevosProductos = agregarOActualizarPrecio(
+      setGuardando(true);
+
+      const nuevosProductos = await agregarOActualizarPrecio(
         productos,
         nombreProducto,
         negocio,
@@ -57,6 +85,8 @@ export default function ComparadorScreen() {
         'No se pudo guardar el precio',
         error.message || 'Ocurrió un error inesperado.'
       );
+    } finally {
+      setGuardando(false);
     }
   };
 
@@ -70,13 +100,15 @@ export default function ComparadorScreen() {
     setPrecio(String(itemPrecio.precio));
   };
 
-  const manejarGuardarEdicion = () => {
-    if (!edicionActual) {
+  const manejarGuardarEdicion = async () => {
+    if (guardando || cargando || !edicionActual) {
       return;
     }
 
     try {
-      const nuevosProductos = editarPrecioNegocio(
+      setGuardando(true);
+
+      const nuevosProductos = await editarPrecioNegocio(
         productos,
         edicionActual.idProducto,
         edicionActual.negocioOriginal,
@@ -92,18 +124,35 @@ export default function ComparadorScreen() {
         'No se pudieron guardar los cambios',
         error.message || 'Ocurrió un error inesperado.'
       );
+    } finally {
+      setGuardando(false);
     }
   };
 
-  const manejarEliminarProducto = (id) => {
-    const nuevosProductos = eliminarProducto(productos, id);
-    setProductos(nuevosProductos);
-    setIdsEnCompra(
-      idsEnCompra.filter((idCompra) => idCompra !== id)
-    );
+  const manejarEliminarProducto = async (id) => {
+    if (guardando || cargando) {
+      return;
+    }
 
-    if (edicionActual && edicionActual.idProducto === id) {
-      limpiarFormulario();
+    try {
+      setGuardando(true);
+
+      const nuevosProductos = await eliminarProducto(productos, id);
+      setProductos(nuevosProductos);
+      setIdsEnCompra(
+        idsEnCompra.filter((idCompra) => idCompra !== id)
+      );
+
+      if (edicionActual && edicionActual.idProducto === id) {
+        limpiarFormulario();
+      }
+    } catch (error) {
+      Alert.alert(
+        'Error',
+        'No se pudo eliminar el producto.'
+      );
+    } finally {
+      setGuardando(false);
     }
   };
 
@@ -116,6 +165,17 @@ export default function ComparadorScreen() {
       setIdsEnCompra([...idsEnCompra, idProducto]);
     }
   };
+
+  if (cargando) {
+    return (
+      <View style={styles.cargando}>
+        <ActivityIndicator size="large" color="#2563EB" />
+        <Text style={styles.textoCargando}>
+          Cargando productos...
+        </Text>
+      </View>
+    );
+  }
 
   const productosFiltrados = filtrarProductos(productos, busqueda);
 
@@ -157,12 +217,14 @@ export default function ComparadorScreen() {
         onAgregar={manejarAgregar}
         onEditar={manejarGuardarEdicion}
         modoEdicion={modoEdicion}
+        deshabilitado={guardando}
       />
 
       {modoEdicion && (
         <Pressable
           style={styles.botonCancelar}
           onPress={limpiarFormulario}
+          disabled={guardando}
         >
           <Text style={styles.textoCancelar}>
             Cancelar edición
@@ -202,6 +264,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 16,
   },
+  cargando: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEF2F6',
+  },
+  textoCargando: {
+    marginTop: 12,
+    color: '#64748B',
+  },
   buscadorContainer: {
     backgroundColor: '#FFFFFF',
     padding: 12,
@@ -227,4 +299,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

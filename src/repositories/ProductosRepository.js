@@ -1,3 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const CLAVE_PRODUCTOS = 'productos_comparador';
+
 const productosIniciales = [
   {
     id: '1',
@@ -37,14 +41,21 @@ const productosIniciales = [
   },
 ];
 
-let productosGuardados = [...productosIniciales];
+export async function obtenerProductos() {
+  const datosGuardados = await AsyncStorage.getItem(CLAVE_PRODUCTOS);
 
-export function obtenerProductos() {
-  return productosGuardados;
+  if (datosGuardados !== null) {
+    return JSON.parse(datosGuardados);
+  }
+
+  await guardarProductos(productosIniciales);
+
+  return productosIniciales;
 }
 
-export function guardarProductos(nuevosProductos) {
-  productosGuardados = nuevosProductos;
-  return productosGuardados;
+export async function guardarProductos(productos) {
+  await AsyncStorage.setItem(
+    CLAVE_PRODUCTOS,
+    JSON.stringify(productos)
+  );
 }
-

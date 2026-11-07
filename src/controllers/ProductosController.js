@@ -9,6 +9,14 @@ import {
   validarDatosPrecio,
 } from '../models/Producto';
 
+function normalizarTexto(texto) {
+  return texto
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
 export function cargarProductos() {
   return obtenerProductos();
 }
@@ -27,11 +35,13 @@ export function agregarOActualizarPrecio(
 
   const nombreLimpio = nombreProducto.trim();
   const negocioLimpio = negocio.trim();
+  const nombreNormalizado = normalizarTexto(nombreLimpio);
+  const negocioNormalizado = normalizarTexto(negocioLimpio);
   const nuevoRegistroPrecio = crearPrecioNegocio(negocioLimpio, precio);
 
   const productoExistente = productosActuales.find(
     (producto) =>
-      producto.nombre.toLowerCase() === nombreLimpio.toLowerCase()
+      normalizarTexto(producto.nombre) === nombreNormalizado
   );
 
   let nuevosProductos;
@@ -44,20 +54,19 @@ export function agregarOActualizarPrecio(
 
       const existeNegocio = producto.precios.some(
         (item) =>
-          item.negocio.toLowerCase() === negocioLimpio.toLowerCase()
+          normalizarTexto(item.negocio) === negocioNormalizado
       );
 
       const nuevosPrecios = existeNegocio
         ? producto.precios.map((item) =>
-            item.negocio.toLowerCase() === negocioLimpio.toLowerCase()
-              ? nuevoRegistroPrecio
+            normalizarTexto(item.negocio) === negocioNormalizado
+              ? { ...nuevoRegistroPrecio, negocio: item.negocio }
               : item
           )
         : [...producto.precios, nuevoRegistroPrecio];
 
       return {
         ...producto,
-        nombre: nombreLimpio,
         precios: nuevosPrecios,
       };
     });
@@ -120,14 +129,14 @@ export function eliminarProducto(productosActuales, id) {
 }
 
 export function filtrarProductos(productos, busqueda) {
-  const termino = busqueda.trim().toLowerCase();
+  const termino = normalizarTexto(busqueda);
 
   if (!termino) {
     return productos;
   }
 
   return productos.filter((producto) =>
-    producto.nombre.toLowerCase().includes(termino)
+    normalizarTexto(producto.nombre).includes(termino)
   );
 }
 

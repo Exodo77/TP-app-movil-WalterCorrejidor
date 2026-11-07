@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     color: '#1E293B',
   },
   boton: {
-    backgroundColor: '#2563EB',
+    backgroundColor: '#16A34A',
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',

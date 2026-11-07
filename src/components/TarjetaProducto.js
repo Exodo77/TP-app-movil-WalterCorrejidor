@@ -184,13 +184,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   botonEditar: {
-    backgroundColor: '#DBEAFE',
+    backgroundColor: '#16A34A',
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 6,
   },
   textoEditar: {
-    color: '#1D4ED8',
+    color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -222,13 +222,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   botonEliminar: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: '#DC2626',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 8,
   },
   textoEliminar: {
-    color: '#B91C1C',
+    color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '600',
   },

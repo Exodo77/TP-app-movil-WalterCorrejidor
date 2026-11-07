@@ -73,7 +73,7 @@ export default function ResumenCompra({
       <View style={styles.contenedorBoton}>
         <Button
           title="Vaciar selección de compra"
-          color="#EA580C"
+          color="#DC2626"
           onPress={onLimpiarCompra}
         />
       </View>

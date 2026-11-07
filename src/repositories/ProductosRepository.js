@@ -1,11 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CLAVE_PRODUCTOS = 'productos_comparador_v2';
+const CLAVE_PRODUCTOS = 'productos_comparador_v3';
 
 const productosIniciales = [
   {
     id: '1',
     nombre: 'Yerba',
+    cantidad: 1,
+    tipoMedida: 'Kilo',
     precios: [
       { negocio: 'Despensa María', precio: 4800 },
       { negocio: 'Supermercado Norte', precio: 5200 },
@@ -17,6 +19,8 @@ const productosIniciales = [
   {
     id: '2',
     nombre: 'Leche',
+    cantidad: 1,
+    tipoMedida: 'Unidad',
     precios: [
       { negocio: 'Despensa María', precio: 1500 },
       { negocio: 'Supermercado Norte', precio: 1700 },
@@ -28,6 +32,8 @@ const productosIniciales = [
   {
     id: '3',
     nombre: 'Pan',
+    cantidad: 1,
+    tipoMedida: 'Kilo',
     precios: [
       { negocio: 'Despensa María', precio: 2200 },
       { negocio: 'Supermercado Norte', precio: 2400 },
@@ -39,6 +45,8 @@ const productosIniciales = [
   {
     id: '4',
     nombre: 'Azúcar',
+    cantidad: 1,
+    tipoMedida: 'Kilo',
     precios: [
       { negocio: 'Despensa María', precio: 1400 },
       { negocio: 'Supermercado Norte', precio: 1500 },
@@ -50,6 +58,8 @@ const productosIniciales = [
   {
     id: '5',
     nombre: 'Arroz',
+    cantidad: 1,
+    tipoMedida: 'Kilo',
     precios: [
       { negocio: 'Despensa María', precio: 1900 },
       { negocio: 'Supermercado Norte', precio: 2100 },
@@ -61,6 +71,8 @@ const productosIniciales = [
   {
     id: '6',
     nombre: 'Fideos',
+    cantidad: 1,
+    tipoMedida: 'Unidad',
     precios: [
       { negocio: 'Despensa María', precio: 1600 },
       { negocio: 'Supermercado Norte', precio: 1750 },
@@ -72,6 +84,8 @@ const productosIniciales = [
   {
     id: '7',
     nombre: 'Aceite',
+    cantidad: 1,
+    tipoMedida: 'Unidad',
     precios: [
       { negocio: 'Despensa María', precio: 3200 },
       { negocio: 'Supermercado Norte', precio: 3400 },
@@ -83,6 +97,8 @@ const productosIniciales = [
   {
     id: '8',
     nombre: 'Harina',
+    cantidad: 1,
+    tipoMedida: 'Kilo',
     precios: [
       { negocio: 'Despensa María', precio: 1300 },
       { negocio: 'Supermercado Norte', precio: 1450 },

@@ -4,7 +4,9 @@ import TarjetaProducto from './TarjetaProducto';
 export default function ListaProductos({
   productos,
   idsEnCompra,
+  cantidadesCompra = {},
   onAlternarCompra,
+  onCambiarCantidadCompra,
   onEditarPrecio,
   onEliminarProducto,
   onRestaurarProductos,
@@ -38,7 +40,15 @@ export default function ListaProductos({
           key={producto.id}
           producto={producto}
           seleccionadoEnCompra={idsEnCompra.includes(producto.id)}
-          onAlternarCompra={() => onAlternarCompra(producto.id)}
+          cantidadEnCompra={
+            cantidadesCompra[producto.id] || producto.cantidad || 1
+          }
+          onAlternarCompra={(cantidadElegida) =>
+            onAlternarCompra(producto.id, cantidadElegida)
+          }
+          onCambiarCantidadCompra={(nuevaCantidad) =>
+            onCambiarCantidadCompra(producto.id, nuevaCantidad)
+          }
           onEditarPrecio={onEditarPrecio}
           onEliminarProducto={() => onEliminarProducto(producto.id)}
         />

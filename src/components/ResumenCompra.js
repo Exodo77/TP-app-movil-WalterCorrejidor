@@ -32,7 +32,19 @@ export default function ResumenCompra({
 
       <Text style={styles.listaNombres}>
         Compra:{' '}
-        {productosSeleccionados.map((p) => p.nombre).join(', ')}
+        {productosSeleccionados
+          .map((p) => {
+            const cant = p.cantidadCompra || p.cantidad || 1;
+            const medida = p.tipoMedida || 'Unidad';
+            const etiquetaMedida =
+              cant === 1
+                ? medida
+                : medida === 'Unidad'
+                ? 'Unidades'
+                : 'Kilos';
+            return `${p.nombre} (${cant} ${etiquetaMedida})`;
+          })
+          .join(', ')}
       </Text>
 
       {totalesPorNegocio.map((item) => {

@@ -31,11 +31,17 @@ export default function ComparadorScreen() {
   const [busqueda, setBusqueda] = useState('');
 
   const [nombreProducto, setNombreProducto] = useState('');
+  const [cantidad, setCantidad] = useState('1');
+  const [tipoMedida, setTipoMedida] = useState('Unidad');
   const [negocio, setNegocio] = useState('');
   const [precio, setPrecio] = useState('');
 
   const [edicionActual, setEdicionActual] = useState(null);
   const [idsEnCompra, setIdsEnCompra] = useState(['1', '2']);
+  const [cantidadesCompra, setCantidadesCompra] = useState({
+    1: 1,
+    2: 1,
+  });
 
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
@@ -62,9 +68,24 @@ export default function ComparadorScreen() {
 
   const limpiarFormulario = () => {
     setNombreProducto('');
+    setCantidad('1');
+    setTipoMedida('Unidad');
     setNegocio('');
     setPrecio('');
     setEdicionActual(null);
+  };
+
+  const manejarSeleccionarProductoSugerido = (nombreElegido) => {
+    setNombreProducto(nombreElegido);
+
+    const encontrado = productos.find(
+      (p) => p.nombre.toLowerCase() === nombreElegido.toLowerCase()
+    );
+
+    if (encontrado) {
+      setCantidad(String(encontrado.cantidad || 1));
+      setTipoMedida(encontrado.tipoMedida || 'Unidad');
+    }
   };
 
   const manejarAgregar = async () => {
@@ -78,6 +99,8 @@ export default function ComparadorScreen() {
       const nuevosProductos = await agregarOActualizarPrecio(
         productos,
         nombreProducto,
+        cantidad,
+        tipoMedida,
         negocio,
         precio
       );
@@ -100,6 +123,8 @@ export default function ComparadorScreen() {
       negocioOriginal: itemPrecio.negocio,
     });
     setNombreProducto(producto.nombre);
+    setCantidad(String(producto.cantidad || 1));
+    setTipoMedida(producto.tipoMedida || 'Unidad');
     setNegocio(itemPrecio.negocio);
     setPrecio(String(itemPrecio.precio));
   };
@@ -117,6 +142,8 @@ export default function ComparadorScreen() {
         edicionActual.idProducto,
         edicionActual.negocioOriginal,
         nombreProducto,
+        cantidad,
+        tipoMedida,
         negocio,
         precio
       );
@@ -199,14 +226,27 @@ export default function ComparadorScreen() {
     }
   };
 
-  const manejarAlternarCompra = (idProducto) => {
+  const manejarAlternarCompra = (idProducto, cantidadElegida) => {
     if (idsEnCompra.includes(idProducto)) {
       setIdsEnCompra(
         idsEnCompra.filter((id) => id !== idProducto)
       );
     } else {
+      if (cantidadElegida) {
+        setCantidadesCompra({
+          ...cantidadesCompra,
+          [idProducto]: cantidadElegida,
+        });
+      }
       setIdsEnCompra([...idsEnCompra, idProducto]);
     }
+  };
+
+  const manejarCambiarCantidadCompra = (idProducto, nuevaCantidad) => {
+    setCantidadesCompra({
+      ...cantidadesCompra,
+      [idProducto]: nuevaCantidad,
+    });
   };
 
   if (cargando) {
@@ -232,9 +272,13 @@ export default function ComparadorScreen() {
     negocio
   );
 
-  const productosEnCompra = productos.filter((producto) =>
-    idsEnCompra.includes(producto.id)
-  );
+  const productosEnCompra = productos
+    .filter((producto) => idsEnCompra.includes(producto.id))
+    .map((producto) => ({
+      ...producto,
+      cantidadCompra:
+        cantidadesCompra[producto.id] || producto.cantidad || 1,
+    }));
 
   return (
     <ScrollView
@@ -289,12 +333,19 @@ export default function ComparadorScreen() {
       <FormularioProducto
         nombreProducto={nombreProducto}
         setNombreProducto={setNombreProducto}
+        cantidad={cantidad}
+        setCantidad={setCantidad}
+        tipoMedida={tipoMedida}
+        setTipoMedida={setTipoMedida}
         negocio={negocio}
         setNegocio={setNegocio}
         precio={precio}
         setPrecio={setPrecio}
         sugerenciasProductos={sugerenciasProductos}
         sugerenciasNegocios={sugerenciasNegocios}
+        onSeleccionarProductoSugerido={
+          manejarSeleccionarProductoSugerido
+        }
         onAgregar={manejarAgregar}
         onEditar={manejarGuardarEdicion}
         onCancelarEdicion={limpiarFormulario}
@@ -305,7 +356,9 @@ export default function ComparadorScreen() {
       <ListaProductos
         productos={productosFiltrados}
         idsEnCompra={idsEnCompra}
+        cantidadesCompra={cantidadesCompra}
         onAlternarCompra={manejarAlternarCompra}
+        onCambiarCantidadCompra={manejarCambiarCantidadCompra}
         onEditarPrecio={manejarIniciarEdicion}
         onEliminarProducto={manejarEliminarProducto}
         onRestaurarProductos={manejarRestaurarProductos}

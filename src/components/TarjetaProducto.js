@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   Pressable,
 } from 'react-native';
@@ -10,25 +12,71 @@ import { obtenerPrecioMasBajo } from '../models/Producto';
 export default function TarjetaProducto({
   producto,
   seleccionadoEnCompra,
+  cantidadEnCompra,
   onAlternarCompra,
+  onCambiarCantidadCompra,
   onEditarPrecio,
   onEliminarProducto,
 }) {
   const mejorOpcion = obtenerPrecioMasBajo(producto.precios);
+  const cantidadBase = producto.cantidad || 1;
+  const tipoMedida = producto.tipoMedida || 'Unidad';
+
+  const [cantidadTexto, setCantidadTexto] = useState(
+    String(cantidadEnCompra || cantidadBase)
+  );
+
+  const obtenerNumeroActual = () => {
+    const num = Number(cantidadTexto);
+    return Number.isFinite(num) && num > 0 ? num : cantidadBase;
+  };
+
+  const manejarTextoCantidad = (texto) => {
+    setCantidadTexto(texto);
+    const num = Number(texto);
+    if (Number.isFinite(num) && num > 0) {
+      onCambiarCantidadCompra(num);
+    }
+  };
+
+  const manejarIncrementar = () => {
+    const nuevoValor = obtenerNumeroActual() + 1;
+    setCantidadTexto(String(nuevoValor));
+    onCambiarCantidadCompra(nuevoValor);
+  };
+
+  const manejarDecrementar = () => {
+    const actual = obtenerNumeroActual();
+    const nuevoValor = actual > 1 ? actual - 1 : 1;
+    setCantidadTexto(String(nuevoValor));
+    onCambiarCantidadCompra(nuevoValor);
+  };
+
+  const pluralMedida =
+    obtenerNumeroActual() === 1
+      ? tipoMedida
+      : tipoMedida === 'Unidad'
+      ? 'Unidades'
+      : 'Kilos';
 
   return (
     <View style={styles.tarjeta}>
       <View style={styles.encabezado}>
-        <Text style={styles.nombreProducto}>
-          Producto: {producto.nombre}
-        </Text>
+        <View style={styles.tituloContainer}>
+          <Text style={styles.nombreProducto}>
+            Producto: {producto.nombre}
+          </Text>
+          <Text style={styles.detalleCantidad}>
+            Precio por: {cantidadBase} {tipoMedida}
+          </Text>
+        </View>
 
         <Pressable
           style={[
             styles.botonCompra,
             seleccionadoEnCompra && styles.botonCompraActivo,
           ]}
-          onPress={onAlternarCompra}
+          onPress={() => onAlternarCompra(obtenerNumeroActual())}
         >
           <Text
             style={[
@@ -39,6 +87,39 @@ export default function TarjetaProducto({
             {seleccionadoEnCompra ? '✓ En mi compra' : '+ Sumar a compra'}
           </Text>
         </Pressable>
+      </View>
+
+      <View style={styles.selectorCompraRow}>
+        <Text style={styles.etiquetaLlevar}>
+          Cantidad a comprar:
+        </Text>
+
+        <View style={styles.controlesCantidad}>
+          <Pressable
+            style={styles.botonMasMenos}
+            onPress={manejarDecrementar}
+          >
+            <Text style={styles.textoMasMenos}>−</Text>
+          </Pressable>
+
+          <TextInput
+            style={styles.inputCantidadCompra}
+            value={cantidadTexto}
+            onChangeText={manejarTextoCantidad}
+            keyboardType="decimal-pad"
+          />
+
+          <Pressable
+            style={styles.botonMasMenos}
+            onPress={manejarIncrementar}
+          >
+            <Text style={styles.textoMasMenos}>+</Text>
+          </Pressable>
+
+          <Text style={styles.unidadCompraTexto}>
+            {pluralMedida}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.listaPrecios}>
@@ -118,14 +199,76 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
+  },
+  tituloContainer: {
+    flex: 1,
+    marginRight: 8,
   },
   nombreProducto: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#1E293B',
-    flex: 1,
-    marginRight: 8,
+  },
+  detalleCantidad: {
+    fontSize: 13,
+    color: '#64748B',
+    marginTop: 2,
+    fontWeight: '500',
+  },
+  selectorCompraRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#FFF7ED',
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FED7AA',
+    marginBottom: 10,
+  },
+  etiquetaLlevar: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#9A3412',
+  },
+  controlesCantidad: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  botonMasMenos: {
+    backgroundColor: '#EA580C',
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textoMasMenos: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  inputCantidadCompra: {
+    borderWidth: 1,
+    borderColor: '#FDBA74',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 6,
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    minWidth: 42,
+    textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#1E293B',
+  },
+  unidadCompraTexto: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#9A3412',
+    marginLeft: 2,
   },
   botonCompra: {
     backgroundColor: '#FFF3E0',
@@ -233,4 +376,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

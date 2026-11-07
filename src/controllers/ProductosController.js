@@ -29,10 +29,17 @@ export async function recargarProductosIniciales() {
 export async function agregarOActualizarPrecio(
   productosActuales,
   nombreProducto,
+  cantidad,
+  tipoMedida,
   negocio,
   precio
 ) {
-  const error = validarDatosPrecio(nombreProducto, negocio, precio);
+  const error = validarDatosPrecio(
+    nombreProducto,
+    cantidad,
+    negocio,
+    precio
+  );
 
   if (error) {
     throw new Error(error);
@@ -72,12 +79,16 @@ export async function agregarOActualizarPrecio(
 
       return {
         ...producto,
+        cantidad: Number(cantidad),
+        tipoMedida: tipoMedida || 'Unidad',
         precios: nuevosPrecios,
       };
     });
   } else {
     const nuevoProducto = crearProducto(
       nombreLimpio,
+      cantidad,
+      tipoMedida,
       negocioLimpio,
       precio
     );
@@ -93,10 +104,17 @@ export async function editarPrecioNegocio(
   idProducto,
   negocioOriginal,
   nombreProducto,
+  cantidad,
+  tipoMedida,
   negocioNuevo,
   precio
 ) {
-  const error = validarDatosPrecio(nombreProducto, negocioNuevo, precio);
+  const error = validarDatosPrecio(
+    nombreProducto,
+    cantidad,
+    negocioNuevo,
+    precio
+  );
 
   if (error) {
     throw new Error(error);
@@ -116,6 +134,8 @@ export async function editarPrecioNegocio(
     return {
       ...producto,
       nombre: nombreProducto.trim(),
+      cantidad: Number(cantidad),
+      tipoMedida: tipoMedida || 'Unidad',
       precios: nuevosPrecios,
     };
   });

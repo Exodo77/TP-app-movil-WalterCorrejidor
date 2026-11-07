@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import TarjetaProducto from './TarjetaProducto';
 
 export default function ListaProductos({
@@ -7,12 +7,27 @@ export default function ListaProductos({
   onAlternarCompra,
   onEditarPrecio,
   onEliminarProducto,
+  onRestaurarProductos,
+  mostrarBotonRestaurar,
 }) {
   if (productos.length === 0) {
     return (
-      <Text style={styles.vacio}>
-        No se encontraron productos para mostrar.
-      </Text>
+      <View style={styles.contenedorVacio}>
+        <Text style={styles.vacio}>
+          No se encontraron productos para mostrar.
+        </Text>
+
+        {mostrarBotonRestaurar && (
+          <Pressable
+            style={styles.botonRestaurar}
+            onPress={onRestaurarProductos}
+          >
+            <Text style={styles.textoRestaurar}>
+              Restaurar productos iniciales
+            </Text>
+          </Pressable>
+        )}
+      </View>
     );
   }
 
@@ -33,11 +48,25 @@ export default function ListaProductos({
 }
 
 const styles = StyleSheet.create({
-  vacio: {
-    textAlign: 'center',
+  contenedorVacio: {
+    alignItems: 'center',
     marginTop: 20,
     marginBottom: 20,
-    color: '#777777',
+  },
+  vacio: {
+    textAlign: 'center',
+    color: '#64748B',
+    marginBottom: 12,
+  },
+  botonRestaurar: {
+    backgroundColor: '#2563EB',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  textoRestaurar: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
 });
-

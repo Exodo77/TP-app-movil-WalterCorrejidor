@@ -17,6 +17,7 @@ export default function FormularioProducto({
   sugerenciasNegocios = [],
   onAgregar,
   onEditar,
+  onCancelarEdicion,
   modoEdicion,
   deshabilitado,
 }) {
@@ -35,17 +36,31 @@ export default function FormularioProducto({
 
       {sugerenciasProductos.length > 0 && (
         <View style={styles.contenedorSugerencias}>
-          {sugerenciasProductos.map((sugerencia) => (
-            <Pressable
-              key={sugerencia}
-              style={styles.chipSugerencia}
-              onPress={() => setNombreProducto(sugerencia)}
-            >
-              <Text style={styles.textoSugerencia}>
-                {sugerencia}
-              </Text>
-            </Pressable>
-          ))}
+          {sugerenciasProductos.map((sugerencia) => {
+            const seleccionado =
+              sugerencia.toLowerCase() ===
+              nombreProducto.trim().toLowerCase();
+
+            return (
+              <Pressable
+                key={sugerencia}
+                style={[
+                  styles.chipSugerencia,
+                  seleccionado && styles.chipSeleccionado,
+                ]}
+                onPress={() => setNombreProducto(sugerencia)}
+              >
+                <Text
+                  style={[
+                    styles.textoSugerencia,
+                    seleccionado && styles.textoChipSeleccionado,
+                  ]}
+                >
+                  {sugerencia}
+                </Text>
+              </Pressable>
+            );
+          })}
         </View>
       )}
 
@@ -58,17 +73,31 @@ export default function FormularioProducto({
 
       {sugerenciasNegocios.length > 0 && (
         <View style={styles.contenedorSugerencias}>
-          {sugerenciasNegocios.map((sugerencia) => (
-            <Pressable
-              key={sugerencia}
-              style={styles.chipSugerencia}
-              onPress={() => setNegocio(sugerencia)}
-            >
-              <Text style={styles.textoSugerencia}>
-                {sugerencia}
-              </Text>
-            </Pressable>
-          ))}
+          {sugerenciasNegocios.map((sugerencia) => {
+            const seleccionado =
+              sugerencia.toLowerCase() ===
+              negocio.trim().toLowerCase();
+
+            return (
+              <Pressable
+                key={sugerencia}
+                style={[
+                  styles.chipSugerencia,
+                  seleccionado && styles.chipSeleccionado,
+                ]}
+                onPress={() => setNegocio(sugerencia)}
+              >
+                <Text
+                  style={[
+                    styles.textoSugerencia,
+                    seleccionado && styles.textoChipSeleccionado,
+                  ]}
+                >
+                  {sugerencia}
+                </Text>
+              </Pressable>
+            );
+          })}
         </View>
       )}
 
@@ -94,9 +123,24 @@ export default function FormularioProducto({
       </Pressable>
 
       {modoEdicion && (
-        <Text style={styles.textoEdicion}>
-          Estás editando el precio de un producto existente.
-        </Text>
+        <>
+          <Pressable
+            style={[
+              styles.botonCancelar,
+              deshabilitado && styles.botonDeshabilitado,
+            ]}
+            onPress={onCancelarEdicion}
+            disabled={deshabilitado}
+          >
+            <Text style={styles.textoBotonCancelar}>
+              Cancelar edición
+            </Text>
+          </Pressable>
+
+          <Text style={styles.textoEdicion}>
+            Estás editando el precio de un producto existente.
+          </Text>
+        </>
       )}
     </View>
   );
@@ -121,7 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFC',
     borderRadius: 8,
     padding: 12,
-    marginBottom: 10,
+    marginBottom: 8,
     fontSize: 15,
     color: '#1E293B',
   },
@@ -129,8 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 6,
-    marginTop: -4,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   chipSugerencia: {
     backgroundColor: '#DBEAFE',
@@ -138,10 +181,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 14,
   },
+  chipSeleccionado: {
+    backgroundColor: '#2563EB',
+  },
   textoSugerencia: {
     color: '#1D4ED8',
     fontSize: 13,
     fontWeight: '600',
+  },
+  textoChipSeleccionado: {
+    color: '#FFFFFF',
   },
   boton: {
     backgroundColor: '#16A34A',
@@ -149,10 +198,22 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
   },
+  botonCancelar: {
+    backgroundColor: '#DC2626',
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
   botonDeshabilitado: {
     opacity: 0.5,
   },
   textoBoton: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  textoBotonCancelar: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',

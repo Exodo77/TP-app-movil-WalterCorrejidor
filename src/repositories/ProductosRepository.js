@@ -45,11 +45,20 @@ export async function obtenerProductos() {
   const datosGuardados = await AsyncStorage.getItem(CLAVE_PRODUCTOS);
 
   if (datosGuardados !== null) {
-    return JSON.parse(datosGuardados);
+    const productosParseados = JSON.parse(datosGuardados);
+
+    if (productosParseados.length > 0) {
+      return productosParseados;
+    }
   }
 
   await guardarProductos(productosIniciales);
 
+  return productosIniciales;
+}
+
+export async function restaurarProductos() {
+  await guardarProductos(productosIniciales);
   return productosIniciales;
 }
 

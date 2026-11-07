@@ -1,6 +1,7 @@
 import {
   obtenerProductos,
   guardarProductos,
+  restaurarProductos,
 } from '../repositories/ProductosRepository';
 
 import {
@@ -19,6 +20,10 @@ function normalizarTexto(texto) {
 
 export async function cargarProductos() {
   return await obtenerProductos();
+}
+
+export async function recargarProductosIniciales() {
+  return await restaurarProductos();
 }
 
 export async function agregarOActualizarPrecio(
@@ -149,10 +154,8 @@ export function obtenerSugerenciasProductos(productos, texto) {
 
   return productos
     .map((producto) => producto.nombre)
-    .filter(
-      (nombre) =>
-        normalizarTexto(nombre).includes(termino) &&
-        normalizarTexto(nombre) !== termino
+    .filter((nombre) =>
+      normalizarTexto(nombre).includes(termino)
     );
 }
 
@@ -176,9 +179,7 @@ export function obtenerSugerenciasNegocios(productos, texto) {
     });
   });
 
-  return negociosUnicos.filter(
-    (negocio) =>
-      normalizarTexto(negocio).includes(termino) &&
-      normalizarTexto(negocio) !== termino
+  return negociosUnicos.filter((negocio) =>
+    normalizarTexto(negocio).includes(termino)
   );
 }

@@ -8,10 +8,12 @@ import {
   ActivityIndicator,
   Alert,
   Pressable,
+  Keyboard,
 } from 'react-native';
 
 import {
   cargarProductos,
+  recargarProductosIniciales,
   agregarOActualizarPrecio,
   editarPrecioNegocio,
   eliminarProducto,
@@ -131,27 +133,66 @@ export default function ComparadorScreen() {
     }
   };
 
-  const manejarEliminarProducto = async (id) => {
+  const manejarEliminarProducto = (id) => {
     if (guardando || cargando) {
       return;
     }
 
+    Alert.alert(
+      'Eliminar producto',
+      '¿Estás seguro de que querés eliminar este producto?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            if (guardando) {
+              return;
+            }
+
+            try {
+              setGuardando(true);
+
+              const nuevosProductos = await eliminarProducto(
+                productos,
+                id
+              );
+              setProductos(nuevosProductos);
+              setIdsEnCompra(
+                idsEnCompra.filter((idCompra) => idCompra !== id)
+              );
+
+              if (edicionActual && edicionActual.idProducto === id) {
+                limpiarFormulario();
+              }
+            } catch (error) {
+              Alert.alert(
+                'Error',
+                'No se pudo eliminar el producto.'
+              );
+            } finally {
+              setGuardando(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const manejarRestaurarProductos = async () => {
     try {
       setGuardando(true);
-
-      const nuevosProductos = await eliminarProducto(productos, id);
-      setProductos(nuevosProductos);
-      setIdsEnCompra(
-        idsEnCompra.filter((idCompra) => idCompra !== id)
-      );
-
-      if (edicionActual && edicionActual.idProducto === id) {
-        limpiarFormulario();
-      }
+      const iniciales = await recargarProductosIniciales();
+      setProductos(iniciales);
+      setIdsEnCompra(['1', '2']);
     } catch (error) {
       Alert.alert(
         'Error',
-        'No se pudo eliminar el producto.'
+        'No se pudieron restaurar los productos iniciales.'
       );
     } finally {
       setGuardando(false);
@@ -206,12 +247,38 @@ export default function ComparadorScreen() {
       </Text>
 
       <View style={styles.buscadorContainer}>
-        <TextInput
-          style={styles.inputBusqueda}
-          placeholder="Buscar producto (ej: Yerba, Leche)..."
-          value={busqueda}
-          onChangeText={setBusqueda}
-        />
+        <View style={styles.filaBuscador}>
+          <TextInput
+            style={styles.inputBusqueda}
+            placeholder="Buscar producto (ej: Yerba, Leche)..."
+            value={busqueda}
+            onChangeText={setBusqueda}
+            returnKeyType="search"
+            onSubmitEditing={() => Keyboard.dismiss()}
+          />
+
+          <Pressable
+            style={styles.botonLupa}
+            onPress={() => Keyboard.dismiss()}
+          >
+            <Text style={styles.textoLupa}>🔍 Buscar</Text>
+          </Pressable>
+        </View>
+
+        {busqueda.trim().length > 0 && (
+          <View style={styles.estadoBusqueda}>
+            <Text style={styles.textoEstadoBusqueda}>
+              Resultados para "{busqueda.trim()}":{' '}
+              {productosFiltrados.length}
+            </Text>
+
+            <Pressable onPress={() => setBusqueda('')}>
+              <Text style={styles.textoLimpiarBusqueda}>
+                Limpiar
+              </Text>
+            </Pressable>
+          </View>
+        )}
       </View>
 
       <ResumenCompra
@@ -230,21 +297,10 @@ export default function ComparadorScreen() {
         sugerenciasNegocios={sugerenciasNegocios}
         onAgregar={manejarAgregar}
         onEditar={manejarGuardarEdicion}
+        onCancelarEdicion={limpiarFormulario}
         modoEdicion={modoEdicion}
         deshabilitado={guardando}
       />
-
-      {modoEdicion && (
-        <Pressable
-          style={styles.botonCancelar}
-          onPress={limpiarFormulario}
-          disabled={guardando}
-        >
-          <Text style={styles.textoCancelar}>
-            Cancelar edición
-          </Text>
-        </Pressable>
-      )}
 
       <ListaProductos
         productos={productosFiltrados}
@@ -252,6 +308,8 @@ export default function ComparadorScreen() {
         onAlternarCompra={manejarAlternarCompra}
         onEditarPrecio={manejarIniciarEdicion}
         onEliminarProducto={manejarEliminarProducto}
+        onRestaurarProductos={manejarRestaurarProductos}
+        mostrarBotonRestaurar={productos.length === 0}
       />
     </ScrollView>
   );
@@ -294,7 +352,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 16,
   },
+  filaBuscador: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   inputBusqueda: {
+    flex: 1,
     borderWidth: 1,
     borderColor: '#CBD5E1',
     backgroundColor: '#F8FAFC',
@@ -303,13 +367,36 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#1E293B',
   },
-  botonCancelar: {
+  botonLupa: {
+    backgroundColor: '#2563EB',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 8,
+    justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
-    marginBottom: 10,
   },
-  textoCancelar: {
-    color: '#64748B',
+  textoLupa: {
+    fontSize: 15,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  estadoBusqueda: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#E2E8F0',
+  },
+  textoEstadoBusqueda: {
+    fontSize: 13,
+    color: '#475569',
     fontWeight: '600',
+  },
+  textoLimpiarBusqueda: {
+    fontSize: 13,
+    color: '#DC2626',
+    fontWeight: 'bold',
   },
 });
